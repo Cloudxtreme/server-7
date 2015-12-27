@@ -1,0 +1,15 @@
+#!/bin/bash
+set -x
+
+stop_server() {
+   /bin/bash /home/minecraft/init/minecraft stop
+}
+
+trap 'stop_server' SIGTERM SIGKILL
+
+/bin/bash /home/minecraft/init/minecraft start
+
+while /bin/bash /home/minecraft/init/minecraft status
+do
+    sleep 15
+done
