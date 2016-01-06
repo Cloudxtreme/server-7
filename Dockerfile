@@ -21,11 +21,19 @@ RUN adduser --disabled-password --gecos '' minecraft
 COPY minecraft/server /home/minecraft/server
 COPY minecraft/init /home/minecraft/init
 
-RUN mkdir -p /home/minecraft/server/worlds \
-&& mkdir -p /etc/service/minecraft \
+RUN mkdir -p /etc/service/minecraft \
+&& mkdir -p /home/minecraft/server/worlds \
+&& mkdir -p /home/minecraft/server/dynmap \
+&& mkdir -p /home/minecraft/server/mods \
+&& mkdir -p /home/minecraft/server/logs \
+&& mkdir -p /home/minecraft/server/plugins \
+&& mkdir -p /home/minecraft/server/config \
+&& mkdir -p /home/minecraft/server/config-server \
 && ln -s /home/minecraft/init/minecraft.runit /etc/service/minecraft/run \
-&& chown -R minecraft:minecraft /home/minecraft/server \
 && chmod +x /home/minecraft/init/minecraft \
 && chmod +x /home/minecraft/init/minecraft.runit \
+&& ln -s /home/minecraft/init/minecraft /usr/bin/minecraft
 
+ENV "TERM=xterm"
 
+VOLUME ["/home/minecraft/server/dynmap", "/home/minecraft/server/worlds", "/home/minecraft/server/plugins", "/home/minecraft/server/mods", "/home/minecraft/server/config", "/home/minecraft/server/logs", "/home/minecraft/server/config-server"]
