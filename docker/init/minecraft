@@ -340,7 +340,7 @@ mc_world_backup() {
 	check_backup_settings
 	get_worlds
 	today="`date +%F-%H-%M-%S`"
-	as_user "mkdir -p $BACKUPPATH"
+	as_user "mkdir -p $BACKUPPATH/worlds"
 
 	# Check if the backup script compatibility is enabled
 	if [ "$BACKUPSCRIPTCOMPATIBLE" ]

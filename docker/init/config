@@ -53,9 +53,9 @@ FORMAT='$1'
 # Settings for backups
 # ===============================
 
-BACKBLAZE_ACCOUNT_ID=${BACKBLAZE_ACCOUNT_ID}
-BACKBLAZE_APP_KEY=${BACKBLAZE_APP_KEY}
-BACKBLAZE_BUCKET=${BACKBLAZE_BUCKET}
+BACKBLAZE_ACCOUNT_ID=
+BACKBLAZE_APP_KEY=
+BACKBLAZE_BUCKET=
 
 # Location for world backups
 BACKUPPATH="/home/${USERNAME}/mcbackup/worlds"
