@@ -101,7 +101,7 @@ MYSQL_ID=$(docker run -d --restart=always \
 -e MYSQL_USER=minecraft \
 -e MYSQL_PASSWORD=minecraft \
 -e MYSQL_DATABASE=minecraft \
-mysql:5.5)
+percona:5.5)
 
 until docker exec ${MYSQL_ID} nc -z 127.0.0.1 3306; do
     echo "Waiting database..."
