@@ -2,7 +2,7 @@
 # https://github.com/phusion/baseimage-docker
 FROM phusion/baseimage:0.9.18
 CMD ["/sbin/my_init"]
-EXPOSE 25565
+EXPOSE 25565 8123
 
 ENV "TERM=xterm"
 ENV "LANG ru_RU.UTF-8"

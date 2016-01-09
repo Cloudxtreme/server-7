@@ -93,8 +93,24 @@ mkdir -p ${DATA_DIR}/logs
 MC_HOME=/home/minecraft
 SERVER_HOME=/home/minecraft/server
 
+ROOT_PASS=$(echo ${SERVER_NAME} | md5sum | awk '{print $1}')
+
+MYSQL_ID=$(docker run -d --restart=always \
+--name=${SERVER_NAME}_mysql \
+-e MYSQL_ROOT_PASSWORD=${ROOT_PASS} \
+-e MYSQL_USER=minecraft \
+-e MYSQL_PASSWORD=minecraft \
+-e MYSQL_DATABASE=minecraft \
+mysql:5.5)
+
+until docker exec ${MYSQL_ID} nc -z 127.0.0.1 3306; do
+    echo "Waiting database..."
+    sleep 2
+done
+
 docker run -d --restart=always \
 --name=${SERVER_NAME} \
+--link ${SERVER_NAME}_mysql:db \
 -e MC_CPU_COUNT=${MC_CPU_COUNT} \
 -e MC_INIT_MEMORY=${MC_INIT_MEMORY} \
 -e MC_MAX_MEMORY=${MC_MAX_MEMORY} \
