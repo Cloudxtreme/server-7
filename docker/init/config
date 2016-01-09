@@ -45,7 +45,7 @@ WORLDSTORAGE="${MCPATH}/worlds"
 # Maximum amount of memory to use
 # Remember: give the ramdisk enough space, subtract from the total amount
 # of RAM available the size of your map and the RAM-consumption of your base system.
-[[ 0 -eq ${#MC_MAX_MEMORY} ]] && MAXMEM="1024M" || INITMEM=${MC_MAX_MEMORY}
+[[ 0 -eq ${#MC_MAX_MEMORY} ]] && MAXMEM="1024M" || MAXMEM=${MC_MAX_MEMORY}
 
 # Whether to output commands for the plugin ConsoleLikeChat ($1 is the command to run)
 FORMAT='$1'

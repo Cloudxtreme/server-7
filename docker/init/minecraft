@@ -55,7 +55,7 @@ is_running() {
 	if [ -f "$pidfile" ]
 	then
 		pid=$(head -1 $pidfile)
-		if ps ax | grep -v grep | grep ${pid} | grep "${SCREEN}" > /dev/null
+		if ps ax | grep -v grep | grep "${pid}" | grep "${SCREEN}" > /dev/null
 		then
 			return 0
 		else
@@ -124,7 +124,7 @@ mc_start() {
 	do
 		sleep 1
 		seconds=$seconds+1
-		if [[ $seconds -eq 5 ]]
+		if [[ $seconds -eq 5 ]] || [[ $seconds -eq 30 ]]
 		then
 			echo "Still not running, waiting a while longer..."
 		fi
