@@ -32,11 +32,11 @@ case ${key} in
     shift # past argument
     ;;
     -im|--init-memory)
-    MC_MAX_MEMORY="$2"
+    MC_INIT_MEMORY="$2"
     shift # past argument
     ;;
     -mm|--max-memory)
-    MC_INIT_MEMORY="$2"
+    MC_MAX_MEMORY="$2"
     shift # past argument
     ;;
     --blazer-account)
