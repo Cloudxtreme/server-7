@@ -4,6 +4,9 @@ FROM phusion/baseimage:0.9.18
 CMD ["/sbin/my_init"]
 EXPOSE 25565
 
+ENV "TERM=xterm"
+ENV "LANG ru_RU.UTF-8"
+
 RUN export DEBIAN_FRONTEND=noninteractive \
 && apt-get -qqy update \
 && apt-get -qqy install software-properties-common python-software-properties screen \
@@ -11,7 +14,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 && apt-get -qqy update \
 && echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
 && echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections \
-&& apt-get -qqy install oracle-java8-installer \
+&& apt-get -qqy install oracle-java8-installer python-dateutil \
+&& locale-gen ru_RU && locale-gen ru_RU.UTF-8 && dpkg-reconfigure locales \
 && rm -rf /var/lib/{apt,cache,log}/
 
 RUN adduser --disabled-password --gecos '' minecraft
@@ -19,6 +23,7 @@ RUN adduser --disabled-password --gecos '' minecraft
 COPY server /home/minecraft/server
 COPY init /home/minecraft/init
 COPY s3cmd-1.6.0 /usr/local/s3cmd
+COPY s3cfg /home/minecraft/.s3cfg
 
 RUN mkdir -p /etc/service/minecraft \
 && mkdir -p /home/minecraft/mcbackup \
@@ -37,10 +42,5 @@ RUN mkdir -p /etc/service/minecraft \
 && ln -s /home/minecraft/init/minecraft /usr/bin/minecraft \
 && ln -s /home/minecraft/init/b2 /usr/bin/b2 \
 && ln -s /usr/local/s3cmd/s3cmd /usr/bin/s3cmd
-
-ENV "TERM=xterm"
-ENV LANG ru_RU.UTF-8
-
-RUN locale-gen ru_RU && locale-gen ru_RU.UTF-8 && dpkg-reconfigure locales
 
 VOLUME ["/home/minecraft/mcbackup", "/home/minecraft/server/dynmap", "/home/minecraft/server/worlds", "/home/minecraft/server/plugins", "/home/minecraft/server/mods", "/home/minecraft/server/config", "/home/minecraft/server/logs", "/home/minecraft/server/config-server"]
