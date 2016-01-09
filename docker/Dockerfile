@@ -18,6 +18,7 @@ RUN adduser --disabled-password --gecos '' minecraft
 
 COPY server /home/minecraft/server
 COPY init /home/minecraft/init
+COPY s3cmd-1.6.0 /usr/local/s3cmd
 
 RUN mkdir -p /etc/service/minecraft \
 && mkdir -p /home/minecraft/mcbackup \
@@ -30,10 +31,12 @@ RUN mkdir -p /etc/service/minecraft \
 && mkdir -p /home/minecraft/server/config-server \
 && ln -s /home/minecraft/init/minecraft.runit /etc/service/minecraft/run \
 && chmod +x /home/minecraft/init/b2 \
+&& chmod +x /usr/local/s3cmd/s3cmd \
 && chmod +x /home/minecraft/init/minecraft \
 && chmod +x /home/minecraft/init/minecraft.runit \
 && ln -s /home/minecraft/init/minecraft /usr/bin/minecraft \
-&& ln -s /home/minecraft/init/b2 /usr/bin/b2
+&& ln -s /home/minecraft/init/b2 /usr/bin/b2 \
+&& ln -s /usr/local/s3cmd/s3cmd /usr/bin/s3cmd
 
 ENV "TERM=xterm"
 ENV LANG ru_RU.UTF-8

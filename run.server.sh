@@ -39,8 +39,17 @@ case ${key} in
     MC_MAX_MEMORY="$2"
     shift # past argument
     ;;
-    --blazer-account)
-    BACKBLAZE_ACCOUNT_ID="$2"
+    --s3-key)
+    S3_ACCESS_KEY="$2"
+    ;;
+    --s3-secret)
+    S3_SECRET_KEY="$2"
+    ;;
+    --s3-region)
+    S3_REGION="$2"
+    ;;
+    --s3-bucket)
+    S3_BUCKET="$2"
     ;;
     --blazer-key)
     BACKBLAZE_APP_KEY="$2"
@@ -90,6 +99,10 @@ docker run -d --restart=always \
 -e MC_INIT_MEMORY=${MC_INIT_MEMORY} \
 -e MC_MAX_MEMORY=${MC_MAX_MEMORY} \
 -e BACKUP_INTERVAL=${BACKUP_INTERVAL} \
+-e S3_ACCESS_KEY=${S3_ACCESS_KEY} \
+-e S3_SECRET_KEY=${S3_SECRET_KEY} \
+-e S3_REGION=${S3_REGION} \
+-e S3_BUCKET=${S3_BUCKET} \
 -e BACKBLAZE_ACCOUNT_ID=${BACKBLAZE_ACCOUNT_ID} \
 -e BACKBLAZE_APP_KEY=${BACKBLAZE_APP_KEY} \
 -e BACKBLAZE_BUCKET=${BACKBLAZE_BUCKET} \

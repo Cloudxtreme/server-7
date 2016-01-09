@@ -13,13 +13,22 @@ MC_INIT_CONFIG=$(cat /home/minecraft/init/config)
 
 if [[ ! -z ${BACKBLAZE_ACCOUNT_ID} ]] && [[ ! -z ${BACKBLAZE_APP_KEY} ]] && [[ ! -z ${BACKBLAZE_BUCKET} ]]; then
     export MC_INIT_BACKUPFORMAT='backblaze'
+    MC_INIT_CONFIG=$(echo "$MC_INIT_CONFIG" | sed -e "s/BACKBLAZE_ACCOUNT_ID=.*/BACKBLAZE_ACCOUNT_ID='${BACKBLAZE_ACCOUNT_ID}'/g")
+    MC_INIT_CONFIG=$(echo "$MC_INIT_CONFIG" | sed -e "s/BACKBLAZE_APP_KEY=.*/BACKBLAZE_APP_KEY='${BACKBLAZE_APP_KEY}'/g")
+    MC_INIT_CONFIG=$(echo "$MC_INIT_CONFIG" | sed -e "s/BACKBLAZE_BUCKET=.*/BACKBLAZE_BUCKET='${BACKBLAZE_BUCKET}'/g")
 else
-    export MC_INIT_BACKUPFORMAT='tar'
+    if [[ ! -z ${S3_ACCESS_KEY} ]] && [[ ! -z ${S3_SECRET_KEY} ]]  && [[ ! -z ${S3_REGION} ]] && [[ ! -z ${S3_BUCKET} ]]; then
+        export MC_INIT_BACKUPFORMAT='s3'
+        MC_INIT_CONFIG=$(echo "$MC_INIT_CONFIG" | sed -e "s/S3_ACCESS_KEY=.*/S3_ACCESS_KEY='${S3_ACCESS_KEY}'/g")
+        MC_INIT_CONFIG=$(echo "$MC_INIT_CONFIG" | sed -e "s/S3_SECRET_KEY=.*/S3_SECRET_KEY='${S3_SECRET_KEY}'/g")
+        MC_INIT_CONFIG=$(echo "$MC_INIT_CONFIG" | sed -e "s/S3_REGION=.*/S3_REGION='${S3_REGION}'/g")
+        MC_INIT_CONFIG=$(echo "$MC_INIT_CONFIG" | sed -e "s/S3_BUCKET=.*/S3_BUCKET='${S3_BUCKET}'/g")
+    else
+        export MC_INIT_BACKUPFORMAT='tar'
+    fi
 fi
 
-MC_INIT_CONFIG=$(echo "$MC_INIT_CONFIG" | sed -e "s/BACKBLAZE_ACCOUNT_ID=.*/BACKBLAZE_ACCOUNT_ID='${BACKBLAZE_ACCOUNT_ID}'/g")
-MC_INIT_CONFIG=$(echo "$MC_INIT_CONFIG" | sed -e "s/BACKBLAZE_APP_KEY=.*/BACKBLAZE_APP_KEY='${BACKBLAZE_APP_KEY}'/g")
-MC_INIT_CONFIG=$(echo "$MC_INIT_CONFIG" | sed -e "s/BACKBLAZE_BUCKET=.*/BACKBLAZE_BUCKET='${BACKBLAZE_BUCKET}'/g")
+
 MC_INIT_CONFIG=$(echo "$MC_INIT_CONFIG" | sed -e "s/BACKUPFORMAT=.*/BACKUPFORMAT='${MC_INIT_BACKUPFORMAT}'/g")
 
 echo "$MC_INIT_CONFIG" > /home/minecraft/init/config
