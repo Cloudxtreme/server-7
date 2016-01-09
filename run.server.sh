@@ -94,6 +94,7 @@ docker run -d --restart=always \
 -e BACKBLAZE_APP_KEY=${BACKBLAZE_APP_KEY} \
 -e BACKBLAZE_BUCKET=${BACKBLAZE_BUCKET} \
 -v ${DATA_DIR}/mcbackup:${MC_HOME}/mcbackup \
+-v ${DATA_DIR}/dynmap:${SERVER_HOME}/dynmap \
 -v ${DATA_DIR}/worlds:${SERVER_HOME}/worlds \
 -v ${DATA_DIR}/mods:${SERVER_HOME}/mods \
 -v ${DATA_DIR}/plugins:${SERVER_HOME}/plugins \
