@@ -89,6 +89,7 @@ mkdir -p ${DATA_DIR}/logs
 mkdir -p ${DATA_DIR}/config
 mkdir -p ${DATA_DIR}/config-server
 mkdir -p ${DATA_DIR}/logs
+mkdir -p ${DATA_DIR}/scripts
 
 MC_HOME=/home/minecraft
 SERVER_HOME=/home/minecraft/server
@@ -97,15 +98,16 @@ ROOT_PASS=$(echo ${SERVER_NAME} | md5sum | awk '{print $1}')
 
 MYSQL_ID=$(docker run -d --restart=always \
 --name=${SERVER_NAME}_mysql \
+-v ${DATA_DIR}/mysql:/var/lib/mysql \
 -e MYSQL_ROOT_PASSWORD=${ROOT_PASS} \
 -e MYSQL_USER=minecraft \
 -e MYSQL_PASSWORD=minecraft \
 -e MYSQL_DATABASE=minecraft \
 percona:5.5)
 
-until docker exec ${MYSQL_ID} nc -z 127.0.0.1 3306; do
+until docker exec ${MYSQL_ID} timeout 1 bash -c "cat < /dev/null > /dev/tcp/localhost/3306"; do
     echo "Waiting database..."
-    sleep 2
+    sleep 3
 done
 
 docker run -d --restart=always \
@@ -128,6 +130,7 @@ docker run -d --restart=always \
 -v ${DATA_DIR}/mods:${SERVER_HOME}/mods \
 -v ${DATA_DIR}/plugins:${SERVER_HOME}/plugins \
 -v ${DATA_DIR}/logs:${SERVER_HOME}/logs \
+-v ${DATA_DIR}/scripts:${SERVER_HOME}/scripts \
 -v ${DATA_DIR}/config:${SERVER_HOME}/config \
 -v ${DATA_DIR}/config-server:${SERVER_HOME}/config-server \
 -p ${SERVER_PORT}:25565 \

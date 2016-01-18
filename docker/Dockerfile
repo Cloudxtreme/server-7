@@ -9,7 +9,7 @@ ENV "LANG ru_RU.UTF-8"
 
 RUN export DEBIAN_FRONTEND=noninteractive \
 && apt-get -qqy update \
-&& apt-get -qqy install software-properties-common python-software-properties screen \
+&& apt-get -qqy install software-properties-common python-software-properties screen wget curl vim mc mysql-client \
 && add-apt-repository -y ppa:webupd8team/java \
 && apt-get -qqy update \
 && echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \

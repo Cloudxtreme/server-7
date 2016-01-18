@@ -45,13 +45,13 @@ if [[ ! -z ${BACKUP_INTERVAL} ]]; then
     [[ 30 -lt ${BACKUP_INTERVAL} ]] || (echo "BACKUP_INTERVAL must be greater than 30" && exit 1)
     BACKUP_INTERVAL=$(echo ${BACKUP_INTERVAL} | awk '{print int($1)}')
     if [[ 60 -lt ${BACKUP_INTERVAL} ]]; then
-        echo "* */$((${BACKUP_INTERVAL}/60)) * * * /home/minecraft/init/minecraft backup" | crontab -
+        echo "0 */$((${BACKUP_INTERVAL}/60)) * * * ps aux | grep '/home/minecraft/init/minecraft backup' | grep -v grep || /home/minecraft/init/minecraft backup" | crontab -
     else
         echo "*/${BACKUP_INTERVAL} * * * * ps aux | grep '/home/minecraft/init/minecraft backup' | grep -v grep || /home/minecraft/init/minecraft backup" | crontab -
     fi
 fi
 
-crontab -l | { cat; echo "* */6 * * * /home/minecraft/init/minecraft log-roll"; } | crontab -
+crontab -l | { cat; echo "0 */6 * * * /home/minecraft/init/minecraft log-roll"; } | crontab -
 
 # Check first run
 if [[ ! $(ls -A /home/minecraft/server/config-server) ]]; then
@@ -82,15 +82,15 @@ if [[ ! $(ls -A /home/minecraft/server/config-server) ]]; then
     mv /home/minecraft/server/whitelist.json /home/minecraft/server/config-server/whitelist.json
 fi
 
-ln -s /home/minecraft/server/config-server/spigot.yml /home/minecraft/server/spigot.yml
-ln -s /home/minecraft/server/config-server/bukkit.yml /home/minecraft/server/bukkit.yml
-ln -s /home/minecraft/server/config-server/cauldron.yml /home/minecraft/server/cauldron.yml
-ln -s /home/minecraft/server/config-server/server.properties /home/minecraft/server/server.properties
-ln -s /home/minecraft/server/config-server/kcauldron.yml /home/minecraft/server/kcauldron.yml
-ln -s /home/minecraft/server/config-server/banned-players.json /home/minecraft/server/banned-players.json
-ln -s /home/minecraft/server/config-server/banned-ips.json /home/minecraft/server/banned-ips.json
-ln -s /home/minecraft/server/config-server/ops.json /home/minecraft/server/ops.json
-ln -s /home/minecraft/server/config-server/whitelist.json /home/minecraft/server/whitelist.json
+ln -s -f /home/minecraft/server/config-server/spigot.yml /home/minecraft/server/spigot.yml
+ln -s -f /home/minecraft/server/config-server/bukkit.yml /home/minecraft/server/bukkit.yml
+ln -s -f /home/minecraft/server/config-server/cauldron.yml /home/minecraft/server/cauldron.yml
+ln -s -f /home/minecraft/server/config-server/server.properties /home/minecraft/server/server.properties
+ln -s -f /home/minecraft/server/config-server/kcauldron.yml /home/minecraft/server/kcauldron.yml
+ln -s -f /home/minecraft/server/config-server/banned-players.json /home/minecraft/server/banned-players.json
+ln -s -f /home/minecraft/server/config-server/banned-ips.json /home/minecraft/server/banned-ips.json
+ln -s -f /home/minecraft/server/config-server/ops.json /home/minecraft/server/ops.json
+ln -s -f /home/minecraft/server/config-server/whitelist.json /home/minecraft/server/whitelist.json
 
 LVLNAME=$(cat /home/minecraft/server/config-server/server.properties | grep level-name | awk '{split($0,a,"="); print a[2]}')
 
@@ -99,12 +99,14 @@ LVLNAME=$(cat /home/minecraft/server/config-server/server.properties | grep leve
 if [[ -d /home/minecraft/server/worlds/${LVLNAME} ]]; then
     [[ -d /home/minecraft/server/${LVLNAME} ]] && rm -rf /home/minecraft/server/${LVLNAME}
 else
-    [[ -d /home/minecraft/server/${LVLNAME} ]] && mv /home/minecraft/server/${LVLNAME} /home/minecraft/server/worlds/${LVLNAME}
+    [[ -d /home/minecraft/server/${LVLNAME} ]] && mv /home/minecraft/server/${LVLNAME} /home/minecraft/server/worlds/${LVLNAME} || mkdir -p /home/minecraft/server/worlds/${LVLNAME}
 fi
 
-ln -s /home/minecraft/server/worlds/${LVLNAME} /home/minecraft/server/${LVLNAME}
+ln -s -f /home/minecraft/server/worlds/${LVLNAME} /home/minecraft/server/${LVLNAME}
 
 /bin/bash /home/minecraft/init/minecraft start
+
+sleep 15
 
 while /bin/bash /home/minecraft/init/minecraft status > /dev/null
 do
